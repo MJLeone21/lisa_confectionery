@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  section.page-header
+    .wrap
+      h1= title || 'Something went wrong'
+      p= message
+
+  section.band-ivory
+    .wrap(style="text-align:center; padding-bottom:40px;")
+      a.btn.btn-gold(href="/") Back to home

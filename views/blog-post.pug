@@ -1,0 +1,16 @@
+extends layout
+
+block content
+  section.band-cream(style="padding-top:50px;")
+    .wrap-narrow
+      p(style="margin-bottom:16px;"): a(href="/blog" style="color:var(--espresso); text-decoration:none; font-size:.88rem; font-weight:600;") ← Back to blog
+
+  section.band-cream(style="padding-top:0;")
+    .wrap-narrow.article
+      .cover
+        img(src=`/assets/${post.coverImage}` alt=post.title)
+      span.tag(style="color:var(--espresso); font-weight:600; font-size:.8rem;")= post.tag
+      h2(style="margin-top:.3em;")= post.title
+      p.meta= post.excerpt
+      each para in post.body.split('\n\n')
+        p= para

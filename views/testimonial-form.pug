@@ -1,0 +1,40 @@
+extends layout
+
+block content
+  section.page-header
+    .wrap
+      h1 Edit review
+      p Correct a typo, adjust the rating, or approve/unapprove it for the public reviews page.
+
+  section.band-ivory
+    .wrap-narrow
+      if error
+        .form-summary(style="border-color:#a33; color:#a33; margin-bottom:20px;")= error
+
+      form.form-card(action=`/dashboard/testimonials/${testimonial._id}/edit` method="POST")
+        .form-grid
+          .field
+            label(for="name") Customer name
+            input#name(type="text" name="name" required value=testimonial.name)
+          .field
+            label(for="cakeType") What they ordered
+            input#cakeType(type="text" name="cakeType" value=testimonial.cakeType)
+          .field
+            label(for="rating") Rating
+            select#rating(name="rating")
+              option(value="5" selected=(String(testimonial.rating) === '5')) ★★★★★
+              option(value="4" selected=(String(testimonial.rating) === '4')) ★★★★
+              option(value="3" selected=(String(testimonial.rating) === '3')) ★★★
+              option(value="2" selected=(String(testimonial.rating) === '2')) ★★
+              option(value="1" selected=(String(testimonial.rating) === '1')) ★
+          .field
+            .check-row(style="margin-top:28px;")
+              input(type="checkbox" id="approved" name="approved" checked=(testimonial.approved === true))
+              label(for="approved") Approved (visible on the site)
+          .field.full
+            label(for="quote") Review text
+            textarea#quote(name="quote" required)= testimonial.quote
+
+        div(style="margin-top:20px; display:flex; gap:12px;")
+          button.btn.btn-gold(type="submit") Save changes
+          a.btn.btn-dark(href="/dashboard?tab=testimonials") Cancel

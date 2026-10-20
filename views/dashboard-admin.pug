@@ -1,0 +1,271 @@
+extends layout
+
+block content
+  section.page-header
+    .wrap
+      h1 Admin dashboard
+      p Welcome back, #{user.name}. Here's what's happening across the bakery.
+
+  section.band-ivory
+    .wrap
+      .dash-tabs
+        button.dash-tab(class=(activeTab === 'overview' ? 'active' : '') data-panel="panel-overview") Overview
+        button.dash-tab(class=(activeTab === 'orders' || activeTab === undefined ? 'active' : '') data-panel="panel-orders") Orders
+        button.dash-tab(class=(activeTab === 'stock' ? 'active' : '') data-panel="panel-stock") Stock
+        button.dash-tab(class=(activeTab === 'products' ? 'active' : '') data-panel="panel-products") Products
+        button.dash-tab(class=(activeTab === 'testimonials' ? 'active' : '') data-panel="panel-testimonials") Reviews (#{pendingTestimonials.length})
+        button.dash-tab(class=(activeTab === 'offers' ? 'active' : '') data-panel="panel-offers") Offers
+        button.dash-tab(class=(activeTab === 'notifications' ? 'active' : '') data-panel="panel-notifications") Notifications (#{unreadNotifications})
+
+      .dash-shell
+        aside.dash-side
+          .who
+            img(src="/assets/lisa_avatar_square.jpg" alt="")
+            div
+              strong= user.name
+              span Admin
+          ul.dash-nav
+            li: a.active(href="/dashboard") Overview
+            li: a(href="/menu") View menu
+            li: a(href="/offers") View offers page
+            li: a(href="/auth/logout") Logout
+        .dash-main
+
+          //- ============ OVERVIEW ============
+          #panel-overview.dash-panel(style=(activeTab === 'overview' ? '' : 'display:none;'))
+            .kpi-row
+              .kpi-card
+                span Revenue (delivered orders)
+                strong= 'UGX ' + revenue.toLocaleString()
+              .kpi-card
+                span Upcoming revenue (in progress)
+                strong= 'UGX ' + upcomingRevenue.toLocaleString()
+              .kpi-card
+                span Stock spend
+                strong= 'UGX ' + spend.toLocaleString()
+              .kpi-card
+                span Profit
+                strong(style=(profit < 0 ? 'color:#a33;' : ''))= (profit < 0 ? '-UGX ' + Math.abs(profit).toLocaleString() : 'UGX ' + profit.toLocaleString())
+              .kpi-card
+                span Orders this month
+                strong= ordersThisMonth
+              .kpi-card
+                span Pending orders
+                strong= pendingOrders
+              .kpi-card
+                span Total orders
+                strong= totalOrders
+              .kpi-card
+                span Reviews pending
+                strong= pendingTestimonials.length
+
+            .section-head(style="margin-top:34px; margin-bottom:16px;")
+              h3(style="margin:0;") Recent activity
+            if notifications.length
+              table.dash-table
+                thead
+                  tr
+                    th Type
+                    th Message
+                    th When
+                tbody
+                  each n of notifications.slice(0, 10)
+                    tr
+                      td: span.status-pill.status-progress= n.type
+                      td= n.message
+                      td= new Date(n.createdAt).toLocaleString()
+            else
+              p(style="color:#6b5445;") Nothing logged yet.
+
+          //- ============ ORDERS ============
+          #panel-orders.dash-panel(style=(activeTab === 'orders' || activeTab === undefined ? '' : 'display:none;'))
+            div(style="display:flex; justify-content:flex-end; margin-bottom:14px;")
+              a.btn.btn-dark(href="/dashboard/orders/new" style="padding:8px 16px; font-size:.85rem;") + Log an order
+            if orders.length
+              table.dash-table
+                thead
+                  tr
+                    th Order
+                    th Customer
+                    th Cake
+                    th Date needed
+                    th Amount
+                    th Status
+                    th Actions
+                tbody
+                  each o of orders
+                    tr(data-order-row=o._id)
+                      td= '#' + o._id.toString().slice(-6)
+                      td
+                        div= o.name
+                        div(style="font-size:.78rem; color:#8a7266;")= o.phone
+                      td= o.cakeType + ' — ' + o.size
+                      td= new Date(o.eventDate).toDateString()
+                      td= o.amount ? ('UGX ' + o.amount.toLocaleString()) : '—'
+                      td
+                        select.status-select(data-order-id=o._id)
+                          option(value="new" selected=(o.status === 'new')) New
+                          option(value="in_progress" selected=(o.status === 'in_progress')) In progress
+                          option(value="ready" selected=(o.status === 'ready')) Ready
+                          option(value="delivered" selected=(o.status === 'delivered')) Delivered
+                          option(value="cancelled" selected=(o.status === 'cancelled')) Cancelled
+                      td
+                        a.btn.btn-dark(href=`/dashboard/orders/${o._id}/edit` style="padding:6px 12px; font-size:.78rem;") Edit
+                        |
+                        button.btn.btn-dark(data-delete-order=o._id style="padding:6px 12px; font-size:.78rem; margin-left:6px;") Delete
+            else
+              p(style="color:#6b5445;") No orders yet.
+
+          //- ============ STOCK ============
+          #panel-stock.dash-panel(style=(activeTab === 'stock' ? '' : 'display:none;'))
+            div(style="display:flex; justify-content:flex-end; margin-bottom:14px;")
+              a.btn.btn-dark(href="/dashboard/stock/new" style="padding:8px 16px; font-size:.85rem;") + Add stock
+            if stockItems.length
+              table.dash-table
+                thead
+                  tr
+                    th Item
+                    th Category
+                    th Quantity
+                    th Cost
+                    th Purchased
+                    th Actions
+                tbody
+                  each s of stockItems
+                    tr(data-stock-row=s._id)
+                      td= s.name
+                      td= s.category
+                      td= s.quantity + ' ' + s.unit
+                      td= 'UGX ' + s.cost.toLocaleString()
+                      td= new Date(s.purchaseDate).toDateString()
+                      td
+                        a.btn.btn-dark(href=`/dashboard/stock/${s._id}/edit` style="padding:6px 12px; font-size:.78rem;") Edit
+                        |
+                        button.btn.btn-dark(data-delete-stock=s._id style="padding:6px 12px; font-size:.78rem; margin-left:6px;") Delete
+              p.field-hint(style="margin-top:14px;") Total stock spend: #[strong= 'UGX ' + spend.toLocaleString()]
+            else
+              p(style="color:#6b5445;") No stock recorded yet — log what you buy so the dashboard can calculate profit.
+
+          //- ============ PRODUCTS ============
+          #panel-products.dash-panel(style=(activeTab === 'products' ? '' : 'display:none;'))
+            div(style="display:flex; justify-content:flex-end; margin-bottom:14px;")
+              a.btn.btn-dark(href="/dashboard/products/new" style="padding:8px 16px; font-size:.85rem;") + Add product
+            if products.length
+              table.dash-table
+                thead
+                  tr
+                    th Name
+                    th Category
+                    th Price label
+                    th Active
+                    th Actions
+                tbody
+                  each p of products
+                    tr(data-product-row=p._id)
+                      td= p.name
+                      td= p.category
+                      td= p.priceLabel
+                      td= p.active ? 'Yes' : 'No'
+                      td
+                        a.btn.btn-dark(href=`/dashboard/products/${p._id}/edit` style="padding:6px 12px; font-size:.78rem;") Edit
+                        |
+                        button.btn.btn-dark(data-delete-product=p._id style="padding:6px 12px; font-size:.78rem; margin-left:6px;") Delete
+            else
+              p(style="color:#6b5445;") No products yet.
+
+          //- ============ TESTIMONIALS ============
+          #panel-testimonials.dash-panel(style=(activeTab === 'testimonials' ? '' : 'display:none;'))
+            h4(style="margin-top:0;") Pending approval
+            if pendingTestimonials.length
+              table.dash-table
+                thead
+                  tr
+                    th Name
+                    th Review
+                    th Rating
+                    th Actions
+                tbody
+                  each t of pendingTestimonials
+                    tr(data-testimonial-row=t._id)
+                      td= t.name
+                      td(style="max-width:320px; white-space:normal;")= t.quote
+                      td= '★'.repeat(t.rating)
+                      td
+                        button.btn.btn-dark(data-approve=t._id style="padding:6px 12px; font-size:.78rem;") Approve
+                        |
+                        a.btn.btn-dark(href=`/dashboard/testimonials/${t._id}/edit` style="padding:6px 12px; font-size:.78rem; margin-left:6px;") Edit
+                        |
+                        button.btn.btn-dark(data-delete-testimonial=t._id style="padding:6px 12px; font-size:.78rem; margin-left:6px;") Delete
+            else
+              p(style="color:#6b5445;") Nothing waiting for approval.
+
+            h4(style="margin-top:30px;") All reviews
+            if allTestimonials.length
+              table.dash-table
+                thead
+                  tr
+                    th Name
+                    th Review
+                    th Live?
+                    th Actions
+                tbody
+                  each t of allTestimonials
+                    tr(data-testimonial-row=t._id)
+                      td= t.name
+                      td(style="max-width:320px; white-space:normal;")= t.quote
+                      td= t.approved ? 'Yes' : 'No'
+                      td
+                        a.btn.btn-dark(href=`/dashboard/testimonials/${t._id}/edit` style="padding:6px 12px; font-size:.78rem;") Edit
+                        |
+                        button.btn.btn-dark(data-delete-testimonial=t._id style="padding:6px 12px; font-size:.78rem; margin-left:6px;") Delete
+            else
+              p(style="color:#6b5445;") No reviews yet.
+
+          //- ============ OFFERS ============
+          #panel-offers.dash-panel(style=(activeTab === 'offers' ? '' : 'display:none;'))
+            div(style="display:flex; justify-content:flex-end; margin-bottom:14px;")
+              a.btn.btn-dark(href="/dashboard/offers/new" style="padding:8px 16px; font-size:.85rem;") + Add offer
+            if offers.length
+              table.dash-table
+                thead
+                  tr
+                    th Title
+                    th Price
+                    th Active
+                    th Expires
+                    th Actions
+                tbody
+                  each o of offers
+                    tr(data-offer-row=o._id)
+                      td= o.title
+                      td= 'UGX ' + o.nowPrice.toLocaleString()
+                      td= o.active ? 'Yes' : 'No'
+                      td= o.expiresAt ? new Date(o.expiresAt).toDateString() : '—'
+                      td
+                        a.btn.btn-dark(href=`/dashboard/offers/${o._id}/edit` style="padding:6px 12px; font-size:.78rem;") Edit
+                        |
+                        button.btn.btn-dark(data-delete-offer=o._id style="padding:6px 12px; font-size:.78rem; margin-left:6px;") Delete
+            else
+              p(style="color:#6b5445;") No offers yet.
+
+          //- ============ NOTIFICATIONS ============
+          #panel-notifications.dash-panel(style=(activeTab === 'notifications' ? '' : 'display:none;'))
+            div(style="display:flex; justify-content:flex-end; margin-bottom:14px;")
+              button.btn.btn-dark#markAllReadBtn(style="padding:8px 16px; font-size:.85rem;") Mark all as read
+            if notifications.length
+              table.dash-table
+                thead
+                  tr
+                    th Type
+                    th Message
+                    th When
+                    th Status
+                tbody
+                  each n of notifications
+                    tr(data-notification-row=n._id)
+                      td: span.status-pill.status-progress= n.type
+                      td= n.message
+                      td= new Date(n.createdAt).toLocaleString()
+                      td= n.read ? 'Read' : 'Unread'
+            else
+              p(style="color:#6b5445;") No notifications yet.

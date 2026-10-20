@@ -1,0 +1,82 @@
+extends layout
+
+block content
+  section.page-header
+    .wrap
+      h1= mode === 'edit' ? 'Edit order' : 'Log a new order'
+      p Admin-only — used for phone/walk-in bookings, or to correct details on an existing one.
+
+  section.band-ivory
+    .wrap-narrow
+      if error
+        .form-summary(style="border-color:#a33; color:#a33; margin-bottom:20px;")= error
+
+      - var action = mode === 'edit' ? `/dashboard/orders/${order._id}/edit` : '/dashboard/orders/new'
+      form.form-card(action=action method="POST")
+        .form-grid
+          .field
+            label(for="name") Customer name
+            input#name(type="text" name="name" required value=order.name)
+          .field
+            label(for="phone") Phone number
+            input#phone(type="tel" name="phone" required value=order.phone)
+          .field
+            label(for="email") Email (optional)
+            input#email(type="email" name="email" value=order.email)
+          .field
+            label(for="occasion") Occasion
+            select#occasion(name="occasion" required)
+              option(value="") Select an occasion
+              each o in occasions
+                option(value=o selected=(order.occasion === o))= o
+          .field
+            label(for="cakeType") Cake category
+            select#cakeType(name="cakeType" required)
+              option(value="") Select a category
+              each c in cakeTypes
+                option(value=c selected=(order.cakeType === c))= c
+          .field
+            label(for="size") Size
+            select#size(name="size" required)
+              option(value="") Select a size
+              each s in sizes
+                option(value=s selected=(order.size === s))= s
+          .field
+            label(for="flavour") Flavour
+            select#flavour(name="flavour" required)
+              option(value="") Select a flavour
+              each f in flavours
+                option(value=f selected=(order.flavour === f))= f
+          .field
+            label(for="amount") Agreed price (UGX)
+            input#amount(type="number" name="amount" min="0" step="1000" value=order.amount placeholder="e.g. 160000")
+          .field.full
+            fieldset
+              legend Extras
+              each ex, i in extrasList
+                - var checked = order.extras && order.extras.includes ? order.extras.includes(ex) : false
+                .check-row
+                  input(type="checkbox" id=`ex${i}` name="extras" value=ex checked=checked)
+                  label(for=`ex${i}`)= ex
+          .field
+            label(for="date") Date needed
+            - var dateVal = order.eventDate ? new Date(order.eventDate).toISOString().slice(0,10) : ''
+            input#date(type="date" name="date" required value=dateVal)
+          .field
+            label(for="fulfilment") Pickup or delivery
+            select#fulfilment(name="fulfilment" required)
+              option(value="") Select an option
+              each fo in fulfilmentOptions
+                option(value=fo selected=(order.fulfilment === fo))= fo
+          .field
+            label(for="status") Status
+            select#status(name="status" required)
+              each st in statuses
+                option(value=st selected=(order.status === st))= st.replace('_',' ')
+          .field.full
+            label(for="notes") Notes
+            textarea#notes(name="notes")= order.notes
+
+        div(style="margin-top:20px; display:flex; gap:12px;")
+          button.btn.btn-gold(type="submit")= mode === 'edit' ? 'Save changes' : 'Save order'
+          a.btn.btn-dark(href="/dashboard?tab=orders") Cancel

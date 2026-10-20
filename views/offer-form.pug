@@ -1,0 +1,44 @@
+extends layout
+
+block content
+  section.page-header
+    .wrap
+      h1= mode === 'edit' ? 'Edit offer' : 'Add offer'
+      p Shown on the public offers page, with a live countdown if you set an expiry date.
+
+  section.band-ivory
+    .wrap-narrow
+      if error
+        .form-summary(style="border-color:#a33; color:#a33; margin-bottom:20px;")= error
+
+      - var action = mode === 'edit' ? `/dashboard/offers/${offer._id}/edit` : '/dashboard/offers/new'
+      form.form-card(action=action method="POST")
+        .form-grid
+          .field.full
+            label(for="title") Title
+            input#title(type="text" name="title" required value=offer.title)
+          .field.full
+            label(for="description") Description
+            input#description(type="text" name="description" value=offer.description)
+          .field
+            label(for="image") Image filename
+            input#image(type="text" name="image" required value=offer.image placeholder="e.g. cupcakes.jpg")
+            p.field-hint Must match a file already in /public/assets.
+          .field
+            label(for="wasPrice") Was price (UGX, optional)
+            input#wasPrice(type="number" name="wasPrice" min="0" value=offer.wasPrice)
+          .field
+            label(for="nowPrice") Now price (UGX)
+            input#nowPrice(type="number" name="nowPrice" min="0" required value=offer.nowPrice)
+          .field
+            label(for="expiresAt") Expires on (optional — powers the countdown)
+            - var expVal = offer.expiresAt ? new Date(offer.expiresAt).toISOString().slice(0,10) : ''
+            input#expiresAt(type="date" name="expiresAt" value=expVal)
+          .field.full
+            .check-row
+              input(type="checkbox" id="active" name="active" checked=(offer.active !== false))
+              label(for="active") Active (shown on the offers page)
+
+        div(style="margin-top:20px; display:flex; gap:12px;")
+          button.btn.btn-gold(type="submit")= mode === 'edit' ? 'Save changes' : 'Add offer'
+          a.btn.btn-dark(href="/dashboard?tab=offers") Cancel

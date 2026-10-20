@@ -1,0 +1,51 @@
+extends layout
+
+block content
+  section.page-header
+    .wrap
+      h1 Offers &amp; promotions
+      p Seasonal deals and limited-time offers. Check back often, or follow us on Instagram and TikTok so you never miss one.
+
+  section.band-ivory
+    .wrap
+      if offers && offers.length
+        - var withCountdown = offers.find(function(o){ return o.expiresAt; })
+        if withCountdown
+          .promo-banner
+            div
+              h3= withCountdown.title
+              p= withCountdown.description
+            .countdown#countdown(data-expires=withCountdown.expiresAt.toISOString())
+              div
+                strong#cd-d 00
+                span Days
+              div
+                strong#cd-h 00
+                span Hours
+              div
+                strong#cd-m 00
+                span Min
+              div
+                strong#cd-s 00
+                span Sec
+
+        .section-head
+          .kicker Current offers
+          h2 Limited-time deals
+        .offer-grid
+          each o of offers
+            .offer-card
+              .frame
+                span.ribbon Offer
+                img(src=`/assets/${o.image}` alt=o.title)
+              .body
+                h4= o.title
+                p= o.description
+                if o.wasPrice
+                  span.was= 'UGX ' + o.wasPrice.toLocaleString()
+                span.now= 'UGX ' + o.nowPrice.toLocaleString()
+      else
+        p(style="color:#6b5445;") No active offers right now — check back soon, or run the seed script to load a sample offer.
+
+      div(style="text-align:center; margin-top:34px;")
+        a.btn.btn-gold(href=`https://wa.me/${whatsappNumber}?text=Hi%20Lisa%20Confectionery%2C%20I%27d%20like%20to%20ask%20about%20current%20offers` target="_blank" rel="noopener") Ask about current offers →

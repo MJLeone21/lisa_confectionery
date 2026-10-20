@@ -1,0 +1,71 @@
+extends layout
+
+block content
+  section.page-header
+    .wrap
+      h1 Contact &amp; location
+      p By appointment only — reach out ahead of your date, especially for tiered and wedding cakes.
+
+  section.band-ivory
+    .wrap.contact-grid
+      div
+        ul.contact-list
+          li
+            span.ic 📞
+            div
+              strong Phone / WhatsApp
+              a(href="tel:+256706200567") 0706 200567
+              |  &middot;
+              a(href="tel:+256786200567") 0786 200567
+              |  &middot;
+              a(href="tel:+256772589450") 0772 589450
+          li
+            span.ic ✉
+            div
+              strong Email
+              a(href="mailto:lisaconfectionery@gmail.com") lisaconfectionery@gmail.com
+          li
+            span.ic 📍
+            div
+              strong Location
+              span Kanyanya Road, Kawempe Division, Kampala, Uganda
+          li
+            span.ic 🕒
+            div
+              strong Hours
+              span By appointment
+        .social-row
+          a(href="https://www.instagram.com/lisa_confectioneryy" target="_blank" rel="noopener") Instagram
+          a(href="https://www.tiktok.com/@lisa_confectioneryy" target="_blank" rel="noopener") TikTok @lisa_confectioneryy
+          a(href="https://twitter.com/lisa_treats256" target="_blank" rel="noopener") Twitter @lisa_treats256
+        div(style="margin-top:26px;")
+          a.btn.btn-gold(href="/book") Book a Cake
+      .map-frame
+        iframe(title="Lisa Confectionery location map" loading="lazy" src="https://www.google.com/maps?q=Kanyanya+Road,+Kawempe,+Kampala,+Uganda&output=embed")
+
+  //- section.band-cream
+  //-   .wrap-narrow
+  //-     .section-head
+  //-       .kicker Send a message
+  //-       h2 Prefer to message us?
+  //-       p Fill this in and we'll get back to you by email or phone.
+  //-     if sent
+  //-       .form-summary(style="border-color:#3E7A4C; color:#2c6e39; margin-bottom:20px;")
+  //-         strong Thanks!
+  //-         |  Your message has been sent — we'll get back to you soon.
+  //-     form#contactForm.form-card(action="/contact" method="POST")
+  //-       .form-grid
+  //-         .field
+  //-           label(for="cname") Your name
+  //-           input#cname(type="text" name="name" required)
+  //-         .field
+  //-           label(for="cphone") Phone
+  //-           input#cphone(type="tel" name="phone")
+  //-         .field.full
+  //-           label(for="cemail") Email
+  //-           input#cemail(type="email" name="email" required)
+  //-         .field.full
+  //-           label(for="cmessage") Message
+  //-           textarea#cmessage(name="message" required placeholder="Tell us about your celebration...")
+  //-       div(style="margin-top:18px;")
+  //-         button.btn.btn-dark.btn-block(type="submit") Send message

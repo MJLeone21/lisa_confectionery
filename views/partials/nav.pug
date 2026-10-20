@@ -1,0 +1,23 @@
+header.site-nav
+  .nav-inner
+    a.brand(href="/")
+      img(src="/assets/logo_transparent.jpg" alt="Lisa Confectionery logo")
+      span Lisa Confectionery
+    button.hamburger#hamburger(aria-label="Open menu" aria-expanded="false") ☰
+    nav.links#navLinks
+      a(href="/" class=currentPath === '/' ? 'active' : '') Home
+      a(href="/about" class=currentPath === '/about' ? 'active' : '') About
+      a(href="/menu" class=currentPath === '/menu' ? 'active' : '') Menu
+      a(href="/gallery" class=currentPath === '/gallery' ? 'active' : '') Gallery
+      a(href="/reviews" class=currentPath === '/reviews' ? 'active' : '') Reviews
+      a(href="/blog" class=currentPath.startsWith('/blog') ? 'active' : '') Blog
+      a(href="/offers" class=currentPath === '/offers' ? 'active' : '') Offers
+      a(href="/contact" class=currentPath === '/contact' ? 'active' : '') Contact
+      if user
+        a.nav-bell(href="/dashboard?tab=notifications" title="Notifications")
+          | 🔔
+          if unreadNotifications
+            span.nav-bell-count= unreadNotifications
+        a(href="/dashboard" class=currentPath === '/dashboard' ? 'active' : '') Dashboard
+        a(href="/auth/logout") Logout
+      a.btn.btn-gold(href="/book") Book a Cake

@@ -1,0 +1,80 @@
+extends layout
+
+block content
+  section.page-header
+    .wrap
+      h1 Book your cake
+      p Fill in your details and the order below — our team will confirm price, availability and pickup or delivery with you directly.
+
+  section.band-ivory
+    .wrap-narrow
+      if error
+        .form-summary(style="border-color:#a33; color:#a33; margin-bottom:20px;")
+          strong Please check the form:
+          |  #{error}
+
+      form#orderForm.form-card(action="/book" method="POST")
+        .form-grid
+          .field
+            label(for="name") Your name
+            input#name(type="text" name="name" required value=values.name placeholder="e.g. Sarah Namuli")
+          .field
+            label(for="phone") Phone number
+            input#phone(type="tel" name="phone" required value=values.phone placeholder="e.g. 07XX XXXXXX")
+          .field
+            label(for="email") Email (optional)
+            input#email(type="email" name="email" value=values.email placeholder="you@example.com")
+          .field
+            label(for="occasion") Occasion
+            select#occasion(name="occasion" required)
+              option(value="") Select an occasion
+              each o in occasions
+                option(value=o selected=(values.occasion === o))= o
+          .field
+            label(for="cakeType") Cake category
+            select#cakeType(name="cakeType" required)
+              option(value="") Select a category
+              each c in cakeTypes
+                option(value=c selected=(values.cakeType === c))= c
+          .field
+            label(for="size") Size
+            select#size(name="size" required)
+              option(value="") Select a size
+              each s in sizes
+                option(value=s selected=(values.size === s))= s
+          .field
+            label(for="flavour") Flavour
+            select#flavour(name="flavour" required)
+              option(value="") Select a flavour
+              each f in flavours
+                option(value=f selected=(values.flavour === f))= f
+          .field.full
+            fieldset
+              legend Extras (optional)
+              each ex, i in extrasList
+                .check-row
+                  input(type="checkbox" id=`ex${i}` name="extras" value=ex)
+                  label(for=`ex${i}`)= ex
+          .field
+            label(for="date") Delivery / pickup date
+            input#date(type="date" name="date" required value=values.date)
+          .field
+            label(for="fulfilment") Delivery or pickup
+            select#fulfilment(name="fulfilment" required)
+              option(value="") Select an option
+              each fo in fulfilmentOptions
+                option(value=fo selected=(values.fulfilment === fo))= fo
+          .field.full
+            label(for="notes") Design notes or inspiration
+            textarea#notes(name="notes" placeholder="Colours, theme, number of tiers, reference photos to bring on the day...")
+              if prefillCakeType
+                | Interested in: #{prefillCakeType}
+              else if values.notes
+                = values.notes
+
+        .form-summary
+          strong How this works:
+          |  we save your booking and get in touch to confirm final pricing, availability for your date, and any design details before payment.
+
+        div(style="margin-top:20px;")
+          button.btn.btn-gold.btn-block(type="submit") Send booking request

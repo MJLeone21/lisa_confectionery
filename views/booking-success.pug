@@ -1,0 +1,47 @@
+extends layout
+
+block content
+  section.page-header
+    .wrap
+      h1 Booking received 🎉
+      p Thank you, #{order.name} — we've saved your request and will confirm the details shortly.
+
+  section.band-ivory
+    .wrap-narrow
+      .form-card
+        h3(style="margin-top:0;") Order summary
+        table.price-table(style="margin-bottom:0;")
+          tbody
+            tr
+              td Reference
+              td= order._id
+            tr
+              td Occasion
+              td= order.occasion
+            tr
+              td Cake
+              td= order.cakeType
+            tr
+              td Size &amp; flavour
+              td= order.size + ' · ' + order.flavour
+            if order.extras && order.extras.length
+              tr
+                td Extras
+                td= order.extras.join(', ')
+            tr
+              td Needed by
+              td= new Date(order.eventDate).toDateString()
+            tr
+              td Pickup / delivery
+              td= order.fulfilment
+            tr
+              td Status
+              td: span.status-pill.status-new= order.status
+
+        .form-summary(style="margin-top:24px;")
+          strong What happens next:
+          |  our team reviews every booking and reaches out on the phone number you provided to confirm price and availability.
+
+        div(style="margin-top:22px; display:flex; gap:12px; flex-wrap:wrap;")
+          a.btn.btn-gold(href=waLink target="_blank" rel="noopener") Message us on WhatsApp too
+          a.btn.btn-dark(href="/menu") Back to menu

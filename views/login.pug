@@ -1,0 +1,25 @@
+extends layout
+
+block content
+  section.page-header
+    .wrap
+      h1 Admin login
+      p This area is for Lisa Confectionery staff only. Looking to book a cake? Head to the booking form instead.
+
+  section.band-ivory
+    .wrap-narrow
+      if error
+        .form-summary(style="border-color:#a33; color:#a33; margin-bottom:20px;")= error
+      form.form-card(action="/auth/login" method="POST")
+        input(type="hidden" name="next" value=next)
+        .form-grid
+          .field.full
+            label(for="email") Email
+            input#email(type="email" name="email" required)
+          .field.full
+            label(for="password") Password
+            input#password(type="password" name="password" required)
+        div(style="margin-top:18px;")
+          button.btn.btn-gold.btn-block(type="submit") Log in
+        p(style="margin-top:16px; font-size:.88rem; text-align:center;")
+          a(href="/book" style="color:var(--gold); font-weight:600; text-decoration:none;") ← Back to booking a cake

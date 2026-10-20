@@ -1,0 +1,164 @@
+extends layout
+
+block content
+  section.page-header
+    .wrap
+      h1 Menu &amp; catalogue
+      p Browse by occasion, then send us a booking request with the design you like.
+
+  //- section.band-ivory
+    .wrap
+      .filter-row
+        button.filter-btn(class=(activeFilter === 'all' ? 'active' : '') data-filter="all") All
+        button.filter-btn(class=(activeFilter === 'bridal' ? 'active' : '') data-filter="bridal") Bridal Shower
+        button.filter-btn(class=(activeFilter === 'kids' ? 'active' : '') data-filter="kids") Children's Cakes
+        button.filter-btn(class=(activeFilter === 'wedding' ? 'active' : '') data-filter="wedding") Wedding Cakes
+        button.filter-btn(class=(activeFilter === 'babyshower' ? 'active' : '') data-filter="babyshower") Baby Shower
+        button.filter-btn(class=(activeFilter === 'introduction' ? 'active' : '') data-filter="introduction") Introduction Cakes
+        button.filter-btn(class=(activeFilter === 'treats' ? 'active' : '') data-filter="treats") Treats
+
+      if Object.keys(grouped).length
+        .product-grid
+          each items, cat in grouped
+            each p in items
+              .product-card(data-category=cat style=(activeFilter !== 'all' && activeFilter !== cat ? 'display:none' : ''))
+                .frame: img(src=`/assets/${p.image}` alt=p.name)
+                .body
+                  span.cat-tag= categoryLabels[cat]
+                  h4= p.name
+                  .price= p.priceLabel
+                  if p.note
+                    p(style="font-size:.78rem;color:#8a7266;margin-top:2px;")= p.note
+                  a.btn.btn-dark(href=`/book?item=${encodeURIComponent(p.name)}` style="margin-top:8px; text-align:center;") Book this cake
+      else
+        p(style="color:#6b5445;") The catalogue is empty right now — run the seed script to load starter products, or add some from the admin API.
+
+  section.band-cream#pricing
+    .wrap
+      .section-head
+        .kicker Let's indulge your sweet tooth
+        h2 Full cake price list
+        p All prices in Ugandan Shillings (UGX). This is the base chart every cake size and flavour is priced from.
+
+      .menu-card
+        .menu-card-head
+          h3 Cake sizes &amp; flavour tiers
+          p Small 8&Prime; (1.5kg) &middot; Medium 10&Prime; (3kg) &middot; Large 12&Prime; (4.5kg) &middot; Extra Large
+        div(style="overflow-x:auto;")
+          table.price-table
+            thead
+              tr
+                th Flavour
+                th Small
+                th Medium
+                th Large
+                th Extra Large
+            tbody
+              tr
+                td Ordinary
+                td 55,000
+                td 100,000
+                td 160,000
+                td 270,000
+              tr
+                td Fruit
+                td 75,000
+                td 150,000
+                td 220,000
+                td 500,000
+              tr
+                td Chocolate fudge &amp; Red Velvet
+                td 70,000
+                td 120,000
+                td 180,000
+                td 350,000
+              tr
+                td Black Forest
+                td 80,000
+                td 140,000
+                td 200,000
+                td 370,000
+        .price-note
+          strong Ordinary flavours include:
+          |  Vanilla, Chocolate, Strawberry, Blueberry, Pineapple, Mango, Toffee, Coffee, Butterscotch, Bubblegum, Raspberry, Lemon, Mint, Chocolate mint, Caramel, Coconut, Orange, Banana, Marble.
+        .extras-grid
+          .extras-col
+            h4 Icing &amp; finishing
+            ul
+              li
+                span Fondant
+                span 20,000
+              li
+                span Whipped cream
+                span 10,000
+              li
+                span Chocolate fudge icing — small
+                span 40,000
+              li
+                span Chocolate fudge icing — medium
+                span 80,000
+              li
+                span Chocolate fudge icing — large
+                span 120,000
+              li
+                span Oreos
+                span 5,000
+              li
+                span Wafers
+                span 5,000
+          .extras-col
+            h4 Toppers &amp; decor
+            ul
+              li
+                span Chocolate drip
+                span 5,000 – 10,000
+              li
+                span Macaroons
+                span 4,000 each
+              li
+                span Edible images
+                span 20,000
+              li
+                span Cake topper, ordinary
+                span 8,000
+              li
+                span Personalised cake topper
+                span 20,000
+              li
+                span Faux decor balls
+                span 10,000
+              li
+                span Butterflies
+                span 5,000
+              li
+                span Grapes
+                span 10,000
+              li
+                span Strawberries
+                span 15,000
+
+      .treats-grid
+        .treat-chip
+          h5 Treat boxes
+          p 90,000
+        .treat-chip
+          h5 Bento box
+          p 45,000
+        .treat-chip
+          h5 Bento cakes
+          p 30,000 – 40,000
+        .treat-chip
+          h5 Glazed doughnuts
+          p 25,000 – 60,000
+        .treat-chip
+          h5 Cupcakes
+          p 25,000 – 70,000, depending on design
+        .treat-chip
+          h5 Easter cakes
+          p 60,000 – 110,000
+        .treat-chip
+          h5 Pillow cake
+          p From 250,000
+        .treat-chip
+          h5 Small celebration cakes
+          p From 55,000

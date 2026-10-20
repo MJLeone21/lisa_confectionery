@@ -1,0 +1,22 @@
+extends layout
+
+block content
+  section.page-header
+    .wrap
+      h1 Blog &amp; tips
+      p Cake care advice, celebration ideas and a look behind the scenes at Lisa Confectionery.
+
+  section.band-ivory
+    .wrap
+      if posts && posts.length
+        .blog-grid
+          each post in posts
+            a.blog-card(href=`/blog/${post.slug}`)
+              .frame: img(src=`/assets/${post.coverImage}` alt=post.title)
+              .body
+                span.tag= post.tag
+                h3= post.title
+                p= post.excerpt
+                span.read Read article →
+      else
+        p(style="color:#6b5445;") No articles yet — run the seed script to load starter posts.

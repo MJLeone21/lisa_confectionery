@@ -1,0 +1,130 @@
+extends layout
+
+block content
+  section.hero#top
+    .wrap
+      .hero-copy
+        .hero-eyebrow Custom cakes &amp; sweet treats, Kampala
+        h1 Every celebration deserves a cake worth #[em talking about.]
+        p.lead Lisa Confectionery bakes and hand-decorates cakes, cupcakes, doughnuts and treat boxes for birthdays, weddings, showers, introductions and every occasion in between — made to order, from scratch.
+        .hero-ctas
+          a.btn.btn-gold(href="/book") Book a Cake
+          a.btn.btn-dark(href="/menu") View full menu
+      .hero-figure
+        .ring(aria-hidden="true")
+        .blob
+          img(src="/assets/awedding1_cover.jpg" alt="Tiered wedding cake decorated with fresh florals, by Lisa Confectionery")
+        .tag
+          strong Made from scratch
+          span 'Indulge your sweet tooth'
+    svg.scallop(viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true")
+      path(d="M0,0 C15.0,60 35.0,60 50.0,0 C65.0,60 85.0,60 100.0,0 C115.0,60 135.0,60 150.0,0 C165.0,60 185.0,60 200.0,0 C215.0,60 235.0,60 250.0,0 C265.0,60 285.0,60 300.0,0 C315.0,60 335.0,60 350.0,0 C365.0,60 385.0,60 400.0,0 C415.0,60 435.0,60 450.0,0 C465.0,60 485.0,60 500.0,0 C515.0,60 535.0,60 550.0,0 C565.0,60 585.0,60 600.0,0 C615.0,60 635.0,60 650.0,0 C665.0,60 685.0,60 700.0,0 C715.0,60 735.0,60 750.0,0 C765.0,60 785.0,60 800.0,0 C815.0,60 835.0,60 850.0,0 C865.0,60 885.0,60 900.0,0 C915.0,60 935.0,60 950.0,0 C965.0,60 985.0,60 1000.0,0 C1015.0,60 1035.0,60 1050.0,0 C1065.0,60 1085.0,60 1100.0,0 C1115.0,60 1135.0,60 1150.0,0 C1165.0,60 1185.0,60 1200.0,0 L1200,60 L0,60 Z" fill="#FFFCF7")
+
+  section.band-ivory
+    .wrap
+      .section-head
+        .kicker What we bake
+        h2 Cakes for every occasion
+        p Browse by celebration, then see full pricing and flavours on the menu page.
+      .cat-grid
+        a.cat-card(href="/menu?category=bridal")
+          .frame: img(src="/assets/bridal_pink.jpg" alt="Bridal shower cake")
+          .label
+            h3 Bridal Shower
+            span.arrow →
+        a.cat-card(href="/menu?category=kids")
+          .frame: img(src="/assets/cocomelon_cake.jpg" alt="Children's birthday cake")
+          .label
+            h3 Children's Cakes
+            span.arrow →
+        a.cat-card(href="/menu?category=wedding")
+          .frame: img(src="/assets/wedding4_red_roses.jpg" alt="Wedding cake with roses")
+          .label
+            h3 Wedding Cakes
+            span.arrow →
+        a.cat-card(href="/menu?category=babyshower")
+          .frame: img(src="/assets/babyshower_bears.jpg" alt="Baby shower cake")
+          .label
+            h3 Baby Shower
+            span.arrow →
+        a.cat-card(href="/menu?category=treats")
+          .frame: img(src="/assets/glazed_doughnuts.jpg" alt="Glazed doughnuts and treat box")
+          .label
+            h3 Treats &amp; Doughnuts
+            span.arrow →
+        a.cat-card(href="/menu?category=introduction")
+          .frame: img(src="/assets/intro_hats.jpg" alt="Introduction ceremony cakes")
+          .label
+            h3 Introduction Cakes
+            span.arrow →
+
+  section.band-cream
+    .wrap.about-grid
+      .about-photo
+        img(src="/assets/lisa_avatar_square.jpg" alt="Angel Lisa Nansubuga, founder of Lisa Confectionery")
+      div
+        .section-head(style="margin-bottom:20px;")
+          .kicker About the bakery
+          h2 Doctor by profession, baker at heart
+        p Lisa Confectionery is a Kampala-based bakery run by Angel Lisa Nansubuga. What started as a love for baking now serves birthdays, showers, introductions and weddings across the city with cakes and treats made from scratch, to order.
+        a.btn.btn-dark(href="/about") Read our story →
+
+  section.band-espresso
+    .wrap
+      .section-head(style="margin-bottom:34px;")
+        .kicker Loved online, too
+        h2 Find us on Instagram &amp; TikTok
+      .stats-strip
+        div
+          strong 10.8K
+          span TikTok followers
+        div
+          strong 81.7K
+          span TikTok likes
+        div
+          strong 2,250+
+          span Instagram followers
+        div
+          strong 391+
+          span Instagram posts
+
+  section.band-ivory
+    .wrap
+      if offer
+        .promo-banner
+          div
+            h3= offer.title
+            p= offer.description
+          a.btn.btn-gold(href="/offers") View offers →
+      else
+        .promo-banner
+          div
+            h3 See our latest offers
+            p Seasonal deals and limited-time specials, updated regularly.
+          a.btn.btn-gold(href="/offers") View offers →
+
+      .section-head
+        .kicker Customer love
+        h2 What clients are saying
+
+      if testimonials && testimonials.length
+        .testi-grid
+          each t in testimonials
+            .testi-card
+              .stars
+                - for (var i = 0; i < t.rating; i++)
+                  | ★
+              p= '“' + t.quote + '”'
+              .testi-who
+                div
+                  strong= t.name
+                  span= t.cakeType || 'Verified customer'
+      else
+        .placeholder-note
+          | No approved reviews yet — be the first to
+          |
+          a(href="/reviews") share your experience
+          | .
+
+      div(style="text-align:center; margin-top:30px;")
+        a.btn.btn-dark(href="/reviews") Read more reviews →

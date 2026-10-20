@@ -1,0 +1,60 @@
+extends layout
+
+block content
+  section.page-header
+    .wrap
+      h1 Customer reviews
+      p What clients say after their cakes arrive.
+
+  section.band-ivory
+    .wrap
+      if submitted
+        .form-summary(style="border-color:#3E7A4C; color:#2c6e39; margin-bottom:26px;")
+          strong Thank you!
+          |  Your review has been submitted and will appear here once approved.
+
+      if testimonials && testimonials.length
+        .testi-grid
+          each t in testimonials
+            .testi-card
+              .stars
+                - for (var i = 0; i < t.rating; i++)
+                  | ★
+              p= '“' + t.quote + '”'
+              .testi-who
+                div
+                  strong= t.name
+                  span= t.cakeType || 'Verified customer'
+      else
+        .placeholder-note No approved reviews yet — be the first to share your experience below.
+
+      div(style="text-align:center; margin:34px 0;")
+        a.btn.btn-gold(href=`https://wa.me/${whatsappNumber}` target="_blank" rel="noopener") Chat with us on WhatsApp →
+
+  section.band-cream
+    .wrap-narrow
+      .section-head
+        .kicker Share your experience
+        h2 Leave a review
+        p Your review is checked before it goes live on the site.
+      form.form-card(action="/reviews" method="POST")
+        .form-grid
+          .field
+            label(for="rname") Your name
+            input#rname(type="text" name="name" required)
+          .field
+            label(for="rcake") What did you order?
+            input#rcake(type="text" name="cakeType" placeholder="e.g. Wedding cake")
+          .field.full
+            label(for="rrating") Rating
+            select#rrating(name="rating")
+              option(value="5") ★★★★★ — Excellent
+              option(value="4") ★★★★ — Great
+              option(value="3") ★★★ — Good
+              option(value="2") ★★ — Okay
+              option(value="1") ★ — Not satisfied
+          .field.full
+            label(for="rquote") Your review
+            textarea#rquote(name="quote" required placeholder="Tell us about your cake and experience...")
+        div(style="margin-top:18px;")
+          button.btn.btn-dark.btn-block(type="submit") Submit review

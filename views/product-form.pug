@@ -1,0 +1,45 @@
+extends layout
+
+block content
+  section.page-header
+    .wrap
+      h1= mode === 'edit' ? 'Edit product' : 'Add product'
+      p Products shown on the public menu page.
+
+  section.band-ivory
+    .wrap-narrow
+      if error
+        .form-summary(style="border-color:#a33; color:#a33; margin-bottom:20px;")= error
+
+      - var action = mode === 'edit' ? `/dashboard/products/${product._id}/edit` : '/dashboard/products/new'
+      form.form-card(action=action method="POST")
+        .form-grid
+          .field.full
+            label(for="name") Product name
+            input#name(type="text" name="name" required value=product.name)
+          .field
+            label(for="category") Category
+            select#category(name="category" required)
+              each c in categories
+                option(value=c selected=(product.category === c))= c
+          .field
+            label(for="image") Image filename
+            input#image(type="text" name="image" required value=product.image placeholder="e.g. bride_cake.jpg")
+            p.field-hint Must match a file already in /public/assets.
+          .field
+            label(for="priceLabel") Price label
+            input#priceLabel(type="text" name="priceLabel" required value=product.priceLabel placeholder="e.g. From UGX 55,000")
+          .field
+            label(for="order") Display order
+            input#order(type="number" name="order" value=(product.order || 0))
+          .field.full
+            label(for="note") Note (optional)
+            input#note(type="text" name="note" value=product.note)
+          .field.full
+            .check-row
+              input(type="checkbox" id="active" name="active" checked=(product.active !== false))
+              label(for="active") Visible on the menu page
+
+        div(style="margin-top:20px; display:flex; gap:12px;")
+          button.btn.btn-gold(type="submit")= mode === 'edit' ? 'Save changes' : 'Add product'
+          a.btn.btn-dark(href="/dashboard?tab=products") Cancel

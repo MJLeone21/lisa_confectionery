@@ -1,0 +1,47 @@
+extends layout
+
+block content
+  section.page-header
+    .wrap
+      h1= mode === 'edit' ? 'Edit stock item' : 'Add stock'
+      p Log ingredients, packaging or anything else you buy for the bakery — this feeds the profit calculation on the dashboard.
+
+  section.band-ivory
+    .wrap-narrow
+      if error
+        .form-summary(style="border-color:#a33; color:#a33; margin-bottom:20px;")= error
+
+      - var action = mode === 'edit' ? `/dashboard/stock/${item._id}/edit` : '/dashboard/stock/new'
+      form.form-card(action=action method="POST")
+        .form-grid
+          .field.full
+            label(for="name") Item name
+            input#name(type="text" name="name" required value=item.name placeholder="e.g. Flour, 25kg bag")
+          .field
+            label(for="category") Category
+            select#category(name="category")
+              each c in categories
+                option(value=c selected=(item.category === c))= c
+          .field
+            label(for="quantity") Quantity
+            input#quantity(type="number" name="quantity" min="0" step="0.01" required value=item.quantity)
+          .field
+            label(for="unit") Unit
+            input#unit(type="text" name="unit" required value=item.unit placeholder="e.g. kg, litres, pcs")
+          .field
+            label(for="cost") Amount spent (UGX)
+            input#cost(type="number" name="cost" min="0" step="500" required value=item.cost)
+          .field
+            label(for="supplier") Supplier (optional)
+            input#supplier(type="text" name="supplier" value=item.supplier)
+          .field
+            label(for="purchaseDate") Purchase date
+            - var dateVal = item.purchaseDate ? new Date(item.purchaseDate).toISOString().slice(0,10) : ''
+            input#purchaseDate(type="date" name="purchaseDate" value=dateVal)
+          .field.full
+            label(for="notes") Notes (optional)
+            textarea#notes(name="notes")= item.notes
+
+        div(style="margin-top:20px; display:flex; gap:12px;")
+          button.btn.btn-gold(type="submit")= mode === 'edit' ? 'Save changes' : 'Add stock'
+          a.btn.btn-dark(href="/dashboard?tab=stock") Cancel
